@@ -11,6 +11,17 @@ def resource_path(relative_path):
         base_path = os.path.abspath(".")
     return os.path.join(base_path, relative_path)
 
+def toggle_fullscreen(game):
+    game.fullscreen = not game.fullscreen
+    if game.fullscreen:
+        game.screen = pygame.display.set_mode((0, 0), pygame.FULLSCREEN)
+    else:
+        print(game.windowed_size)
+        game.screen = pygame.display.set_mode(game.windowed_size)
+        actual_size = game.screen.get_size()
+        if actual_size != game.windowed_size:
+            print("WARNING: Actual window size does not match desired size.")
+
 def load_image(path):
     img = pygame.image.load(resource_path(BASE_IMG_PATH + path)).convert()
     img.set_colorkey((0, 0, 0))

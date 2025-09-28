@@ -1,5 +1,9 @@
-# https://www.youtube.com/watch?v=2gABYM5M0ww
-# https://www.youtube.com/watch?v=8OMghdHP-zs
+'''
+To be cited:
+    Initial Tutorial: https://www.youtube.com/watch?v=2gABYM5M0ww
+Potential videos:
+    Gun Physics?: https://www.youtube.com/watch?v=8OMghdHP-zs
+'''
 
 import math
 import os
@@ -9,7 +13,7 @@ import sys
 
 
 from scripts.entities import PhysicsEntity, Player, Enemy
-from scripts.utils import load_image, load_images, resource_path, Animation
+from scripts.utils import load_image, load_images, resource_path, toggle_fullscreen, Animation
 from scripts.tilemap import Tilemap
 from scripts.clouds import Clouds
 from scripts.particle import Particle
@@ -19,14 +23,26 @@ class Game:
     def __init__(self):
         pygame.init()
 
-        pygame.display.set_caption('Ninja Game')
+        pygame.display.set_caption('Project Vleugel')
         self.screen = pygame.display.set_mode((640, 480))
         self.display = pygame.Surface((320, 240), pygame.SRCALPHA)
         self.display_2 = pygame.Surface((320, 240))
 
+        self.fullscreen = False
+        self.windowed_size = (640, 480)
+
+
         self.clock = pygame.time.Clock()
 
         self.movement = [False, False]
+
+        self.key_mapping = {
+            'LEFT': pygame.K_LEFT,
+            'RIGHT': pygame.K_RIGHT,
+            'DASH': pygame.K_x,
+            'JUMP': pygame.K_UP,
+            'FULLSCREEN': pygame.K_p
+        }
 
         self.assets = {
             'decor' : load_images('tiles/decor'),
@@ -209,20 +225,26 @@ class Game:
                     pygame.quit()
                     sys.exit()
                 if event.type == pygame.KEYDOWN:
-                    if event.key == pygame.K_LEFT:
+                    if event.key == self.key_mapping['LEFT']:
                         self.movement[0] = True
-                    if event.key == pygame.K_RIGHT:
+                    if event.key == self.key_mapping['RIGHT']:
                         self.movement[1] = True
-                    if event.key == pygame.K_UP:
+                    if event.key == self.key_mapping['JUMP']:
                         if self.player.jump():
                             self.sfx['jump'].play()
-                    if event.key == pygame.K_x:
+                    if event.key == self.key_mapping['DASH']:
                         self.player.dash()
+                    if event.key == self.key_mapping['FULLSCREEN']:
+                        toggle_fullscreen(self)
                 if event.type == pygame.KEYUP:
                     if event.key == pygame.K_LEFT:
                         self.movement[0] = False
                     if event.key == pygame.K_RIGHT:
                         self.movement[1] = False
+                    
+                if event.type == pygame.VIDEORESIZE:
+                    if not self.fullscreen:
+                        self.screen = pygame.display.set_mode(self.windowed_size, pygame.RESIZABLE)
 
             if self.transition:
                 transition_surf = pygame.Surface(self.display.get_size())
