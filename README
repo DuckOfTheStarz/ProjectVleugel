@@ -1,0 +1,9 @@
+Developer Notes:
+
+    Monday, September 29th:
+        - Fullscreen Toggle added
+            - FIX: When in fullscreen, the game stretches to fit the screen.
+            - TODO: Fix aspect ratio when in fullscreen. (IMPORTANT !!!)
+            - TODO: Implement menu overlay for current levels.
+
+    
