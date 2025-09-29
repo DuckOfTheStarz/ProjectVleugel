@@ -15,8 +15,8 @@ def toggle_fullscreen(game):
     game.fullscreen = not game.fullscreen
     if game.fullscreen:
         game.screen = pygame.display.set_mode((0, 0), pygame.FULLSCREEN)
+        print(game.screen.get_size())
     else:
-        print(game.windowed_size)
         game.screen = pygame.display.set_mode(game.windowed_size)
         actual_size = game.screen.get_size()
         if actual_size != game.windowed_size:

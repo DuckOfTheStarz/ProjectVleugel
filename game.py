@@ -255,7 +255,29 @@ class Game:
             self.display_2.blit(self.display, (0, 0))
 
             screenshake_offset = (random.random() * self.screenshake - self.screenshake / 2, random.random() * self.screenshake - self.screenshake / 2)
-            self.screen.blit(pygame.transform.scale(self.display_2, self.screen.get_size()), screenshake_offset)
+            
+            screen_width, screen_height = self.screen.get_size()
+            target_width, target_height = 320, 240
+            target_aspect = target_width / target_height
+
+            screen_aspect = screen_width / screen_height
+
+            if screen_aspect > target_aspect:
+                draw_height = screen_height
+                draw_width = int(draw_height * target_aspect)
+                offset_x = (screen_width - draw_width) // 2
+                offset_y = 0
+            else:
+                draw_width = screen_width
+                draw_height = int(draw_width / target_aspect)
+                offset_x = 0
+                offset_y = (screen_height - draw_height) // 2
+
+            scaled_display = pygame.transform.scale(self.display_2, (draw_width, draw_height))
+            self.screen.fill((0, 0, 0))
+            self.screen.blit(scaled_display, (offset_x + screenshake_offset[0], offset_y + screenshake_offset[1]))
+            #self.screen.blit(pygame.transform.scale(self.display_2, self.screen.get_size()), screenshake_offset)
+            
             pygame.display.update() # Update the display
             self.clock.tick(60) # Limit to 60 frames per second
 
